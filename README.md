@@ -1,6 +1,6 @@
 # BloodHound CE API Report
 
-A small Python CLI for repeatable Active Directory lab review with BloodHound
+A small Python CLI for repeatable Active Directory security review with BloodHound
 Community Edition. It validates collector ZIP files, optionally uploads them,
 waits for BloodHound graph analysis, runs a focused Cypher assessment, and
 exports results in formats that can be searched or included in a write-up.
@@ -75,9 +75,9 @@ Import a collector ZIP and assess one user:
 ```bash
 BH_USERNAME=admin python3 bh_report.py \
   --url http://127.0.0.1:8081 \
-  --zip loot/bloodhound/collection.zip \
-  --principal USER@LAB.LOCAL \
-  --output loot/bloodhound/report
+  --zip data/collection.zip \
+  --principal USER@EXAMPLE.COM \
+  --output reports/user-assessment
 ```
 
 Query data that is already in BloodHound by omitting `--zip`:
@@ -85,8 +85,8 @@ Query data that is already in BloodHound by omitting `--zip`:
 ```bash
 BH_USERNAME=admin python3 bh_report.py \
   --url http://127.0.0.1:8081 \
-  --principal USER@LAB.LOCAL \
-  --output loot/bloodhound/report
+  --principal USER@EXAMPLE.COM \
+  --output reports/user-assessment
 ```
 
 To validate and inventory a collector ZIP without contacting BloodHound:
@@ -94,8 +94,8 @@ To validate and inventory a collector ZIP without contacting BloodHound:
 ```bash
 python3 bh_report.py \
   --offline \
-  --zip loot/bloodhound/collection.zip \
-  --output loot/bloodhound/offline-inventory
+  --zip data/collection.zip \
+  --output reports/offline-inventory
 ```
 
 Run `python3 bh_report.py --help` for timeout, TLS, upload, and report-size
@@ -107,12 +107,12 @@ options.
 bare `NAME` together with `--domain DOMAIN`. If both arguments include a
 domain, they must match.
 
-### Reusing the tool across labs
+### Data isolation
 
 BloodHound persists imported graph data. Use a clean BloodHound datastore for
-each lab, or explicitly clear the previous lab before importing a new one.
-Domain filtering limits these reports but cannot prevent contamination when
-unrelated labs reuse the same domain or object names.
+each assessment, or explicitly clear the previous dataset before importing a
+new one. Domain filtering limits these reports but cannot prevent contamination
+when independent environments reuse the same domain or object names.
 
 Offline mode only validates collection structure and object counts. Nested
 membership, effective rights, and attack paths require BloodHound's analyzed
